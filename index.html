@@ -1,0 +1,378 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/1999/xhtml">
+<html lang="en" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+		<meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+		<meta content="utf-8" http-equiv="encoding">
+
+		<title>KCC - Budget Graphics</title>
+
+        <meta name="description" content="">
+
+        <!-- Viewport -->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <!-- Fonts -->
+        <link href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,700" rel="stylesheet" type="text/css">
+
+        <!-- Stylesheets -->
+        <!-- !note! -->
+        <link href="http://www.kent.gov.uk/__data/assets/css_file/0020/6518/style.min.css" rel="stylesheet" media="screen">
+
+        <!-- IE7/8 support -->
+         <!-- !note! -->
+        <!--[if lt IE 9]>
+        <script type="text/javascript" src="//www.kent.gov.uk/__data/assets/js_file/0018/4383/respond.min.js"></script>
+         <![endif]-->
+
+        <!-- 
+        _/\/\____/\/\____/\/\/\/\/\____/\/\/\/\/\_
+        _/\/\__/\/\____/\/\__________/\/\_________ 
+        _/\/\/\/\______/\/\__________/\/\_________  
+        _/\/\__/\/\____/\/\__________/\/\_________   
+        _/\/\____/\/\____/\/\/\/\/\____/\/\/\/\/\_    
+        __________________________________________   
+        Kent County Council
+        -->
+
+        <!-- Stylesheets -->
+        <link href="assets/css/screen.css" rel="stylesheet" media="screen">
+
+        <!-- Modernizr -->
+        <script src="assets/foundation/js/vendor/custom.modernizr.js"></script>
+        <!-- JS -->
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+		<!-- Raphael -->
+        <script src="assets/js/vender/raphael.js" type="text/javascript"></script>
+    </head>
+    <body>
+        
+        <div class="row">
+			<div class="medium-5 columns">
+		        <div id="holder"></div>
+				<table>
+		            <tbody>
+		                <tr>
+		                    <th scope="row">Abults and older people services</th>
+		                    <td>-325</td>
+		                </tr>
+		                <tr>
+		                    <th scope="row">Childrens Services</th>
+		                    <td>-268</td>
+		                </tr>
+		                <tr>
+		                    <th scope="row">Community Services</th>
+		                    <td>-37.3</td>
+		                </tr>
+		                <tr>
+		                    <th scope="row">Enviroment</th>
+		                    <td>-5.2</td>
+		                </tr>
+		                <tr>
+		                    <th scope="row">highways</th>
+		                    <td>-37.8</td>
+		                </tr>
+		                <tr>
+		                    <th scope="row">Housing related support for Vunrable people (Supporting people)</th>
+		                    <td>-22.5</td>
+		                </tr>
+		                <tr>
+		                    <th scope="row">Local Democracy</th>
+		                    <td>-5.5</td>
+		                </tr>
+		                <tr>
+		                    <th scope="row">Planning & Transport Strategy</th>
+		                    <td>-1.5</td>
+		                </tr>
+		                <tr>
+		                    <th scope="row">Piblic Health</th>
+		                    <td>-51.3</td>
+		                </tr>
+		                <tr>
+		                    <th scope="row">Rejeneration & Economic development</th>
+		                    <td>-3.9</td>
+		                </tr>
+		                <tr>
+		                    <th scope="row">Regulatory Services</th>
+		                    <td>-6</td>
+		                </tr>
+		                <tr>
+		                    <th scope="row">School & High Needs Education Budget</th>
+		                    <td>-706.1</td>
+		                </tr>
+		                <tr>
+		                    <th scope="row">School Services</th>
+		                    <td>-14.8</td>
+		                </tr>
+		                <tr>
+		                    <th scope="row">Transport Services</th>
+		                    <td>-67.2</td>
+		                </tr>
+		                <tr>
+		                    <th scope="row">Waste Managment</th>
+		                    <td>-67.2</td>
+		                </tr>
+		            </tbody>
+		        </table>
+			</div>
+			<div class="medium-7 columns"></div>
+        </div>
+
+		<script type="text/javascript">
+
+
+			Raphael.fn.pieChart = function (cx, cy, r, values, labels, stroke) {
+
+			    var paper = this,
+			        rad = Math.PI / 180,
+			        chart = this.set();
+
+
+
+
+			    function sector(cx, cy, r, startAngle, endAngle, params) {
+			        var x1 = cx + r * Math.cos(-startAngle * rad),
+			            x2 = cx + r * Math.cos(-endAngle * rad),
+			            y1 = cy + r * Math.sin(-startAngle * rad),
+			            y2 = cy + r * Math.sin(-endAngle * rad);
+
+
+			        return paper.path(["M", cx, cy, "L", x1, y1, "A", r, r, 0, +(endAngle - startAngle > 180), 0, x2, y2, "z"]).attr(params);
+			    }
+
+
+
+
+
+			    var angle = 0,
+			        total = 0,
+			        start = 0,
+			        process = function (j) {
+
+			        	// This whole variable seems to be to with randomizing color
+			            var value = values[j],
+			                angleplus = 360 * value / total,
+			                popangle = angle + (angleplus / 2),
+			                color = Raphael.hsb(start, .75, 1),
+			                ms = 500,
+			                delta = 100, // this and anouther couple of bits control the distance the text is away from the circle
+			                bcolor = Raphael.hsb(start, 1, 1),
+			                p = sector(cx, cy, r, angle, angle + angleplus, {fill: "0-" + bcolor + "-" + color, stroke: stroke, "stroke-width": 3}),
+			                txt = paper.text(
+			                	/*cx + (r + delta + 55) * Math.cos(-popangle * rad), cy + (r + delta + 25) * Math.sin(-popangle * rad), */
+			                	150, 50, labels[j]).attr({fill: "#232323", stroke: "none", opacity: 1 /* changed from 0 */, "font-size": 18, "text-anchor":"start"});
+
+			            //hover functions
+			            p.mouseover(function () {
+			                p.stop().animate({transform: "s1.1 1.1 " + cx + " " + cy}, ms, "elastic");
+			                //txt.stop().animate({opacity: 1}, ms, "elastic");
+			            }).mouseout(function () {
+			                p.stop().animate({transform: ""}, ms, "elastic");
+			                //txt.stop().animate({opacity: 0}, ms);
+			            });
+
+			            for (var i = 0; i < txt.length; i++){
+			            	txt[i].attr({
+								y: 50 + (50[i])
+							});
+						};
+
+			            angle += angleplus;
+			            chart.push(p);
+			            chart.push(txt);
+			            start += .1;
+			        };
+			    for (var i = 0, ii = values.length; i < ii; i++) {
+			        total += values[i];
+			    }
+			    for (i = 0; i < ii; i++) {
+			        process(i);  // this for loop just loops through all individual table items
+			    }
+			    return chart;
+			};
+
+
+
+
+
+			$(function () {
+			    var values = [],
+			        labels = [];
+			    var w = 700;
+				var h = 700;
+
+
+			    $("tr").each(function () {
+			        values.push(parseInt($("td", this).text(), 10));
+			        labels.push($("th", this).text());
+			    });
+			    $("table").hide();
+			    var paper = Raphael("holder");
+
+			    paper.pieChart(350, 350, 200, values, labels, "#fff").attr({"stroke-width":0});
+			    paper.circle(350, 350, 120).attr({fill: "#fff","stroke-width":0});
+				/*var paper = Raphael("wrap");*/
+				paper.setViewBox(0,0,w,h,true);
+				paper.setSize('100%', '100%');
+
+
+			});
+		</script>
+
+
+
+		<!-- <div class="holder" id="holder0" data-firstData="25" data-secondData="75"></div>
+		<div class="holder" id="holder1" data-firstData="50" data-secondData="50"></div>
+		<div class="holder" id="holder2" data-firstData="17" data-secondData="83"></div>
+
+		<script type="text/javascript">
+			$(document).ready(function() {
+			  Raphael.fn.pieChart = function (cx, cy, r, rin, values, labels, stroke) {
+			    var paper = this,
+			      rad = Math.PI / 180,
+			      chart = this.set(),
+			      colors = new Array("#e8e8f0","#a1c436","#ff9900");
+			    function sector(cx, cy, r, startAngle, endAngle, params) {
+			      var x1 = cx + r * Math.cos(-startAngle * rad),
+			          x2 = cx + r * Math.cos(-endAngle * rad),
+			          y1 = cy + r * Math.sin(-startAngle * rad),
+			          y2 = cy + r * Math.sin(-endAngle * rad);
+			          xx1 = cx + rin * Math.cos(-startAngle * rad),
+			          xx2 = cx + rin * Math.cos(-endAngle * rad),
+			          yy1 = cy + rin * Math.sin(-startAngle * rad),
+			          yy2 = cy + rin * Math.sin(-endAngle * rad);
+			        
+			      return paper.path(["M", xx1, yy1,
+			                         "L", x1, y1, 
+			                         "A", r, r, 0, +(endAngle - startAngle > 180), 0, x2, y2, 
+			                         "L", xx2, yy2, 
+			                         "A", rin, rin, 0, +(endAngle - startAngle > 180), 1, xx1, yy1, "z"]
+			                       ).attr(params);
+			    }
+			    var angle = 90,
+			      total = 0,
+			      start = 0.22,
+			      process = function (j) {
+			        var value = values[j],
+			          angleplus = 360 * value / total,
+			          popangle = angle + (angleplus / 2),
+			          color = Raphael.hsb(start, .75, 1),
+			          ms = 500,
+			          delta = 30,
+			          p = sector(cx, cy, r, angle, angle + angleplus, {fill: colors[j], stroke: stroke, "stroke-width": 2}),
+			          txt = paper.text(100,  100, values[j]+"\n"+labels[j]).attr({fill: colors[j], stroke: "none", opacity: 0, "font-size": 20});
+			        p.mouseover(function () {
+			          p.stop().animate({transform: "s1.1 1.1 " + cx + " " + cy}, 100, "linear");
+			          txt.stop().animate({opacity: 1}, 100, "linear");
+			        }).mouseout(function () {
+			          p.stop().animate({transform: ""}, 100, "linear");
+			          txt.stop().animate({opacity: 0}, ms);
+			        });
+			        angle += angleplus;
+			        chart.push(p);
+			        chart.push(txt);
+			        start -= 0.14;
+			      };
+			    for (var i = 0, ii = values.length; i < ii; i++) {
+			      total += values[i];
+			    }
+			    for (i = 0; i < ii; i++) {
+			      process(i);
+			    }
+			    return chart;
+				};
+
+				$(function () {
+			    //create the values and labels array
+			    var values = [],
+			        labels = ["spent","left"];
+
+			    holderCounter = 0;
+
+			    while(1){
+			    	//loop through the holder in the html until one doesn't exist
+			      //percentage spent is in a data attribute so needs to be converted from string to int
+			      values[0] = parseInt($('#holder'+holderCounter).attr('data-firstData'));
+			      //quick sanity check that there is a holder to be used
+			      if($('#holder'+holderCounter).length <= 0){
+			            break;
+			        }
+
+			      values[1] = parseInt($('#holder'+holderCounter).attr('data-secondData'));
+
+			      Raphael("holder"+holderCounter, 200, 200).pieChart(100, 100, 70, 40, values, labels, "#fff");
+			      //increment to reference the next pie chart
+			      holderCounter++;
+			    }
+			  });
+			});
+		</script> 
+
+
+		<div id="paper"></div>
+		<script type="text/javascript">
+			/*        $(document).ready(function() { 
+			//Raphael document area
+			var paper = Raphael('paper', '520', '343.415');
+
+
+
+
+
+			//Arrays are declaired here
+			var paperGroups = [North_Kent,East_Kent,South_Kent,West_Kent];
+			var paperText = [North_Text,East_Text,South_Text,West_Text];
+			var compass = [North,East,South,West];
+			var linkTo = [,,,];
+
+			//Groups Declaired here
+			North_Kent.push(North,North_Text);East_Kent.push(East,East_Text);South_Kent.push(South,South_Text);West_Kent.push(West,West_Text);
+
+
+				
+
+			// Variable function "theEndFunction"
+			var theEndFunction = function(areaGroups,area){
+				areaGroups.mouseover(function(){
+					area.attr({"fill":"#099f1d"});
+				    area.animate({ stroke: "#099f1d", 'stroke-width': 2, opacity: .75 }, 1000, 'elastic');
+				
+				if(Raphael.type != 'VML') //solves IE problem
+				areaGroups.toFront();
+					});
+
+				areaGroups.mouseout(function(){ 
+					area.attr({"fill":"#39B54A"});
+					area.stop().animate({ stroke: "#39B54A", 'stroke-width': 0, opacity: .75 }, 1000, 'elastic');
+				});	
+			}
+
+			//Variable in for loop........
+			for (var i = 0; i < paperGroups.length; i++){
+				theEndFunction(paperGroups[i],compass[i]);
+				compass[i].attr({
+					fill: '#39B54A',
+					opacity: .75,
+					'stroke-width': '0',
+					'stroke-opacity': '1',
+					href:linkTo[i],
+				    title:linkTo[i]
+				});
+				paperText[i].attr({
+					fill: '#FFFFFF',
+					'stroke-width': '0',
+					'stroke-opacity': '1',
+					href:linkTo[i],
+				    title:linkTo[i]
+				});
+
+			}
+
+
+
+
+				
+					});*/
+		</script>-->
+
+    </body>
+</html>
